@@ -1,0 +1,5 @@
+{
+  "name":"Northstar - Post-service follow-up","active":false,
+  "nodes":[{"parameters":{"path":"northstar-completed","httpMethod":"POST","responseMode":"onReceived"},"id":"webhook","name":"Work order completed","type":"n8n-nodes-base.webhook","typeVersion":2,"position":[240,300]},{"parameters":{"method":"POST","url":"={{ $env.NORTHSTAR_API_URL }}/v1/workflows/post-service-follow-up","sendHeaders":true,"headerParameters":{"parameters":[{"name":"Authorization","value":"=Bearer {{ $env.NORTHSTAR_SERVICE_TOKEN }}"}]},"sendBody":true,"contentType":"raw","rawContentType":"application/json","body":"={{ JSON.stringify({ entityId: $json.body.workOrderId }) }}"},"id":"api","name":"Queue consent-aware follow-up","type":"n8n-nodes-base.httpRequest","typeVersion":4,"position":[520,300]}],
+  "connections":{"Work order completed":{"main":[[{"node":"Queue consent-aware follow-up","type":"main","index":0}]]}},"settings":{"executionOrder":"v1"},"tags":[{"name":"reference-workflow"}]
+}

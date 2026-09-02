@@ -1,0 +1,11 @@
+{
+  "name": "Northstar - Urgent safety escalation",
+  "active": false,
+  "nodes": [
+    {"parameters":{"path":"northstar-safety","httpMethod":"POST","responseMode":"onReceived"},"id":"webhook","name":"Safety Webhook","type":"n8n-nodes-base.webhook","typeVersion":2,"position":[240,300]},
+    {"parameters":{"conditions":{"options":{"caseSensitive":false},"conditions":[{"leftValue":"={{ $json.body.safetyReason }}","rightValue":"","operator":{"type":"string","operation":"notEmpty"}}]}},"id":"guard","name":"Safety reason present","type":"n8n-nodes-base.if","typeVersion":2,"position":[480,300]},
+    {"parameters":{"method":"POST","url":"={{ $env.NORTHSTAR_API_URL }}/v1/workflows/safety-escalation","sendHeaders":true,"headerParameters":{"parameters":[{"name":"Authorization","value":"=Bearer {{ $env.NORTHSTAR_SERVICE_TOKEN }}"}]},"sendBody":true,"contentType":"raw","rawContentType":"application/json","body":"={{ JSON.stringify({ entityId: $json.body.workOrderId, reason: $json.body.safetyReason }) }}"},"id":"api","name":"Create escalation","type":"n8n-nodes-base.httpRequest","typeVersion":4,"position":[720,220]}
+  ],
+  "connections":{"Safety Webhook":{"main":[[{"node":"Safety reason present","type":"main","index":0}]]},"Safety reason present":{"main":[[{"node":"Create escalation","type":"main","index":0}],[]]}},
+  "settings":{"executionOrder":"v1"},"tags":[{"name":"reference-workflow"},{"name":"human-in-loop"}]
+}
